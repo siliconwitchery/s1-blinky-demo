@@ -1,0 +1,12 @@
+# macOS temp files
+.DS_Store
+
+# Firmware build files
+.build
+
+# VSCode files
+.vscode/*
+!.vscode/.clang-format
+!.vscode/c_cpp_properties_template.jsonc
+!.vscode/launch_template.jsonc
+!.vscode/tasks_template.jsonc
