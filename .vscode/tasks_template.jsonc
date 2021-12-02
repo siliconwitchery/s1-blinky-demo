@@ -23,7 +23,7 @@
             }
         },
         {
-            "label": "Build verilog code",
+            "label": "Build verilog model",
             "command": "make",
             "args": [
                 "build-verilog",

@@ -40,10 +40,6 @@ SRC_FILES += \
 INC_FOLDERS += \
   . \
 
-# Add compile time options
-OPT += -flto 	# Link time optimization
-OPT += -g3 		# Debugging information (takes way more flash)
-
 # This is where the magic happens.
 include s1-sdk/s1.mk
 
@@ -66,9 +62,3 @@ build-verilog:
 
 	@echo "Appending the .h file to store binary in flash instead of ram."
 	@sed '1s/^/const /' $(OUTPUT_DIRECTORY)/fpga_binfile_ram.h > fpga_binfile.h
-
-# Build task to simulate the verilog using a test bench
-sim-verilog:
-	iverilog -o $(TOP)_tb.out -D VCD_OUTPUT=$(TOP)_tb cells_sim.v $(TOP)_tb.v
-	vvp $(TOP)_tb.out -fst
-	gtkwave $(TOP)_tb.fst
