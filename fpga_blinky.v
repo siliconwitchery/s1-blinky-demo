@@ -28,7 +28,7 @@
  */
 
 module top (
-            output wire D3,  // LED on S1 popout
+            output wire D3  // LED on S1 popout
            );
 
 
