@@ -23,7 +23,7 @@
                 "-AutoConnect",
                 "1"
             ],
-            "runToMain": true,
+            "runToEntryPoint": "main",
             // Set this path to the nRF SDK folder
             "svdFile": "${env:HOME}/nRF5_SDK/modules/nrfx/mdk/nrf52811.svd",
             "preLaunchTask": "Build nRF code",
