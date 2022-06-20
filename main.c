@@ -1,28 +1,29 @@
 /**
  * @file  examples/fpga-blinky/main.c
- * @brief Simple FPGA blinky Application running on S1
- *        
- *        Includes basic configuration of the S1 module, and
- *        operations required to boot the FPGA. The FPGA 
- *        verilog project can be built by running:
- *           "make build-verilog" 
- *        from this folder.
- * 
- * @attention Copyright 2021 Silicon Witchery AB
  *
- * Permission to use, copy, modify, and/or distribute this 
+ * @brief Simple FPGA blinky Application running on S1
+ *
+ *        Includes basic configuration of the S1 module, and
+ *        operations required to boot the FPGA. The FPGA
+ *        verilog project can be built by running:
+ *           "make build-verilog"
+ *        from this folder.
+ *
+ * @attention Copyright 2022 Silicon Witchery AB
+ *
+ * Permission to use, copy, modify, and/or distribute this
  * software for any purpose with or without fee is hereby
  * granted, provided that the above copyright notice and this
  * permission notice appear in all copies.
  *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS
- * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO 
- * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, 
- * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER 
- * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN 
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, 
- * ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+ * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+ * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+ * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+ * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ * ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  */
 
@@ -56,7 +57,10 @@ static uint32_t page_address = 0x000000;
 /**
  * @brief Clock event callback. Not used but required to have.
  */
-void clock_event_handler(nrfx_clock_evt_type_t event) {}
+void clock_event_handler(nrfx_clock_evt_type_t event)
+{
+    (void)event;
+}
 
 /**
  * @brief Timer based state machine for flashing the FPGA
@@ -72,9 +76,9 @@ static void fpga_boot_task(void *p_context)
     {
     // Configure power and erase the flash
     case STARTED:
-        s1_pimc_fpga_vcore(true);
-        s1_pmic_set_vio(2.8);
-        s1_pmic_set_vaux(3.3);
+        s1_pimc_set_vfpga(true);
+        s1_pmic_set_vio(2.8f, false);
+        s1_pmic_set_vaux(3.3f);
         s1_fpga_hold_reset();
         s1_flash_wakeup();
         s1_flash_erase_all();
@@ -86,9 +90,9 @@ static void fpga_boot_task(void *p_context)
     case ERASING:
         if (!s1_flash_is_busy())
         {
-            pages_remaining = (uint32_t)ceil((float)fpga_binfile_bin_len / 256.0);
+            pages_remaining = (uint32_t)ceil((float)fpga_binfile_bin_len / 256.0f);
             fpga_boot_state = FLASHING;
-            LOG("Flashing %d pages.", pages_remaining);
+            LOG("Flashing %d pages.", (int)pages_remaining);
         }
         break;
 
@@ -96,7 +100,7 @@ static void fpga_boot_task(void *p_context)
     case FLASHING:
         if (!s1_flash_is_busy())
         {
-            s1_flash_page_from_image(page_address, &fpga_binfile_bin);
+            s1_flash_page_from_image(page_address, (unsigned char *)&fpga_binfile_bin);
             pages_remaining--;
             page_address += 0x100;
         }
@@ -118,6 +122,10 @@ static void fpga_boot_task(void *p_context)
             fpga_boot_state = DONE;
             LOG("FPGA started.");
         }
+        break;
+
+    // Done. Do nothing more
+    case DONE:
         break;
     }
 }

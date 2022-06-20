@@ -1,5 +1,6 @@
 /**
  * @file  examples/fpga-blinky/fpga_blinky.v
+ *
  * @brief FPGA blinky Application
  *        
  *        Toggles D3 every 400ms. Driven by the internal HF
@@ -9,7 +10,7 @@
  *           "make build-verilog" 
  *        from this folder.
  * 
- * @attention Copyright 2021 Silicon Witchery AB
+ * @attention Copyright 2022 Silicon Witchery AB
  *
  * Permission to use, copy, modify, and/or distribute this 
  * software for any purpose with or without fee is hereby
