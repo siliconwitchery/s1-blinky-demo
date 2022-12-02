@@ -15,11 +15,11 @@ cd s1-blinky-demo
 
 If you haven't already, set up these [tools](https://github.com/siliconwitchery/s1-sdk/blob/main/README.md#setting-up-the-tools) in order to build the project.
 
-You should then be able to run `make`. *Be sure to include the path to your NRF SDK folder*.
+You should then be able to run `make`. *Be sure to include the path to your NRF SDK folder, and ARM GCC toolchain*.
 
 ``` bash
 make build-verilog NRF_SDK_PATH=${HOME}/nRF5_SDK
-make flash NRF_SDK_PATH=${HOME}/nRF5_SDK
+make flash NRF_SDK_PATH=${HOME}/nRF5_SDK GNU_INSTALL_ROOT=/arm-gcc-tools-path/bin/
 ```
 
 The first `make` command will build the Verilog project, and convert the binary file into a header file. The nRF application transfers this binary to the FPGA after boot up. In your application, you could download this binary dynamically over Bluetooth rather than storing it within the flash of the nRF chip.
